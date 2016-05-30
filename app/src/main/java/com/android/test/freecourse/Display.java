@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,11 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by TOAN on 5/18/2016.
+ * Display
+ * <p></p>
+ * @author ToanNDD
+ * @version 1.0.0
+ * created 2016/29/05
+ * company bonsey
  */
 public class Display extends Activity {
 
-    private static final String TAG = "RecyclerViewCourseList";
+    private final String TAG = "RecyclerViewCourseList";
 
     private List<Course> courseList = new ArrayList<Course>();
 
@@ -52,7 +56,7 @@ public class Display extends Activity {
 
     private int numberItemOfSroll = 3;
 
-    /*Downloading json data from below url*/
+    //Downloading json data from below url
     private final String url = "https://api.myjson.com/bins/1j38k";
 
     @Override
@@ -60,26 +64,26 @@ public class Display extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        /* Allow activity to show indeterminate progressbar */
+        //Allow activity to show indeterminate progressbar
         this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setContentView(R.layout.display);
 
-        // Lookup the swipe container view
+        //Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
+        //Setup refresh listener which triggers new data loading
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
+                //Your code to refresh the list here.
+                //Make sure you call swipeContainer.setRefreshing(false)
+                //once the network request has completed successfully.
                 fetchTimelineAsync();
             }
         });
 
-        // Configure the refreshing colors
+        //Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -88,7 +92,7 @@ public class Display extends Activity {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
-        /* Initialize recyclerview */
+        //Initialize recyclerview
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -108,6 +112,16 @@ public class Display extends Activity {
         Log.e(TAG, "Refresh JSON data!");
     }
 
+    public enum FetchStatus {
+        STATUS_FAILED(0), STATUS_SUCCESS(1), STATUS_OK(200);
+        private final int value;
+
+        FetchStatus(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+    }
+
     public class AsyncHttpTask extends AsyncTask<String, Void, Integer> {
 
         @Override
@@ -118,23 +132,22 @@ public class Display extends Activity {
         @Override
         protected Integer doInBackground(String... params) {
 
-            InputStream inputStream = null;
             Integer result = 0;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
 
             try {
-                /* forming th java.net.URL object */
+
                 URL url = new URL(params[0]);
 
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-                /* for Get request */
+                //for Get request
                 urlConnection.setRequestMethod("GET");
 
                 int statusCode = urlConnection.getResponseCode();
 
-                /* 200 represents HTTP OK */
-                if (statusCode ==  200) {
+                //200 represents HTTP OK
+                if (statusCode ==  FetchStatus.STATUS_OK.getValue()) {
 
                     BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder response = new StringBuilder();
@@ -144,16 +157,16 @@ public class Display extends Activity {
                     }
 
                     parseResult(response.toString());
-                    result = 1; // Successful
-                }else{
-                    result = 0; //"Failed to fetch data!";
+                    result = FetchStatus.STATUS_SUCCESS.getValue(); //Successful
+                } else {
+                    result = FetchStatus.STATUS_FAILED.getValue(); //Failed to fetch data
                 }
 
             } catch (Exception e) {
                 Log.d(TAG, e.getLocalizedMessage());
             }
 
-            return result; //"Failed to fetch data!";
+            return result;
         }
 
 
@@ -162,12 +175,14 @@ public class Display extends Activity {
 
             setProgressBarIndeterminateVisibility(false);
 
-            /* Download complete. Lets update UI */
+            //ownload complete. Lets update UI
             progressBar.setVisibility(View.GONE);
+
+            int i;
 
             if (result == 1) {
 
-                for (int i = 1 ;  i < numberItemOfSroll ;i++) {
+                for (i = 1 ;  i < numberItemOfSroll ;i++) {
                     courseListDisplay.add(courseList.get(i));
                 }
                 adapter = new MyRecyclerAdapter(Display.this, courseListDisplay, mRecyclerView);
@@ -185,18 +200,18 @@ public class Display extends Activity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                           // Log.e(TAG, "onLoadMore recyleview called!");
+                           //Log.e(TAG, "onLoadMore recyleview called!");
                             int start = courseListDisplay.size();
                             int end = start + numberItemOfSroll;
-
-                            for (int i = start + 1; i <= end; i++) {
+                            int i;
+                            for (i = start + 1; i <= end; i++) {
                                 if(i < courseList.size() - 1) {
                                     courseListDisplay.add(courseList.get(i));
                                     adapter.notifyItemInserted(courseListDisplay.size());
                                 }
                             }
                             adapter.setLoaded();
-                            //or you can add all at once but do not forget to call mAdapter.notifyDataSetChanged();
+                            //or you can add all at once but do not forget to call notifyDataSetChanged();
                         }
                     }, 100);
                 }
@@ -209,18 +224,19 @@ public class Display extends Activity {
             JSONObject response = new JSONObject(result);
             JSONArray courses = response.optJSONArray("course");
 
-            /*Initialize array if null*/
+            //Initialize array if null
             if (null == courseList) {
                 courseList = new ArrayList<Course>();
             }
-
-            for (int i = 0; i < courses.length(); i++) {
+            int i;
+            //int j;
+            for (i = 0; i < courses.length(); i++) {
                 JSONObject courseObj = courses.optJSONObject(i);
                 Course item = new Course();
                 item.setTitle(courseObj.getString("id"));
                 item.setDescription(courseObj.getString("name"));
                 //JSONArray images = courseObj.getJSONArray("image");
-                //for (int j = 0; j < images.length(); j++) {
+                //for (j = 0; j < images.length(); j++) {
                     //JSONObject image = images.optJSONObject(i);
                     //item.setThumbnail(image.getString("url"));
                 //}

@@ -1,7 +1,12 @@
 package com.android.test.freecourse.model;
 
 /**
- * Created by TOAN on 5/18/2016.
+ * User
+ * <p>POJO class</p>
+ * @author ToanNDD
+ * @version 1.0.0
+ * created 2016/29/05
+ * company bonsey
  */
 public class User {
 

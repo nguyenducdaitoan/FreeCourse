@@ -10,7 +10,12 @@ import com.android.test.freecourse.dao.DatabaseHelper;
 import com.android.test.freecourse.model.User;
 
 /**
- * Created by TOAN on 5/18/2016.
+ * SignUp Activity
+ * <p></p>
+ * @author ToanNDD
+ * @version 1.0.0
+ * created 2016/29/05
+ * company bonsey
  */
 public class SignUp extends Activity {
 
@@ -23,8 +28,7 @@ public class SignUp extends Activity {
 
     public void onSignUpClick(View v)
     {
-        if(v.getId()== R.id.Bsignupbutton)
-        {
+        if(v.getId()== R.id.Bsignupbutton) {
             EditText uname = (EditText)findViewById(R.id.TFuname);
             EditText pass1 = (EditText)findViewById(R.id.TFpass1);
             EditText pass2 = (EditText)findViewById(R.id.TFpass2);
@@ -33,14 +37,11 @@ public class SignUp extends Activity {
             String pass1str = pass1.getText().toString();
             String pass2str = pass2.getText().toString();
 
-            if(!pass1str.equals(pass2str))
-            {
+            if(!pass1str.equals(pass2str)) {
                 //popup msg
                 Toast pass = Toast.makeText(SignUp.this , "Passwords don't match!" , Toast.LENGTH_SHORT);
                 pass.show();
-            }
-            else
-            {
+            } else {
                 //insert the detail user into database
                 User user = new User();
                 user.setUsername(unamestr);

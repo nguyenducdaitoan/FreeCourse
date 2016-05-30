@@ -9,18 +9,23 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.android.test.freecourse.model.User;
 
 /**
- * Created by TOAN on 5/18/2016.
+ * DatabaseHelper
+ * <p></p>
+ * @author ToanNDD
+ * @version 1.0.0
+ * created 2016/29/05
+ * company bonsey
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "user.db";
-    private static final String TABLE_NAME = "user";
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_USERNAME = "username";
-    private static final String COLUMN_PASSWORD = "password";
+    private final String TABLE_NAME = "user";
+    private final String COLUMN_ID = "id";
+    private final String COLUMN_USERNAME = "username";
+    private final String COLUMN_PASSWORD = "password";
     SQLiteDatabase db;
-    private static final String TABLE_CREATE = "create table if not exists user (id integer primary key not null , " +
+    private final String TABLE_CREATE = "create table if not exists user (id integer primary key not null , " +
             " username text not null , password text not null);";
 
     public DatabaseHelper(Context context) {
@@ -54,23 +59,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         String query = "select username, password from "+TABLE_NAME;
         Cursor cursor = db.rawQuery(query , null);
-        String a, b;
-        b = "not found";
+        String user, pass;
+        pass = "not found";
         if(cursor.moveToFirst())
         {
             do{
-                a = cursor.getString(0);
+                user = cursor.getString(0);
 
-                if(a.equals(username))
+                if(user.equals(username))
                 {
-                    b = cursor.getString(1);
+                    pass = cursor.getString(1);
                     break;
                 }
             }
             while(cursor.moveToNext());
         }
 
-        return b;
+        return pass;
     }
 
     @Override

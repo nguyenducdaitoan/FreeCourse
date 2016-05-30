@@ -17,14 +17,20 @@ import com.android.test.freecourse.model.Course;
 import com.android.test.freecourse.listener.OnLoadMoreListener;
 
 import java.util.List;
+
 /**
- * Created by TOAN on 5/18/2016.
+ * MyRecyclerAdapter
+ * <p></p>
+ * @author ToanNDD
+ * @version 1.0.0
+ * created 2016/29/05
+ * company bonsey
  */
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.CustomViewHolder> {
     private List<Course> courseList;
     private Context mContext;
-    // The minimum amount of items to have below your current scroll position
-    // before loading more.
+    //The minimum amount of items to have below your current scroll position
+    //before loading more.
     private int visibleThreshold = 3;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
@@ -40,7 +46,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Cu
                     .getLayoutManager();
             loading = false;
 
-            // add scroll feature to recyclerView
+            //add scroll feature to the recyclerView
             recyclerView
                     .addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -53,8 +59,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Cu
                                     .findLastVisibleItemPosition();
                             if (!loading &&
                                     totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                                // End has been reached
-                                // Do something
+                                //End has been reached
+                                //Do something
                                 if (onLoadMoreListener != null) {
                                     onLoadMoreListener.onLoadMore();
                                 }
@@ -103,7 +109,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Cu
             Course feedItem = courseList.get(position);
             //Toast.makeText(mContext, feedItem.getTitle(), Toast.LENGTH_SHORT).show();
 
-            // Starting detail activity
+            //Starting detail activity
             Intent in = new Intent(holder.context,
                     Detail.class);
             in.putExtra("title", feedItem.getTitle());
@@ -118,15 +124,9 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Cu
         return (null != courseList ? courseList.size() : 0);
     }
 
-    // Clean all elements of the recycler
+    //Clean all elements of the recycler
     public void clear() {
         courseList.clear();
-        notifyDataSetChanged();
-    }
-
-    // Add a list of items
-    public void addAll(List<Course> list) {
-        courseList.addAll(list);
         notifyDataSetChanged();
     }
 

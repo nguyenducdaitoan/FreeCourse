@@ -1,7 +1,12 @@
 package com.android.test.freecourse.listener;
 
 /**
- * Created by TOAN on 5/20/2016.
+ * OnLoadMoreListener
+ * <p></p>
+ * @author ToanNDD
+ * @version 1.0.0
+ * created 2016/29/05
+ * company bonsey
  */
 public interface OnLoadMoreListener {
     void onLoadMore();
